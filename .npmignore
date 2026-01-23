@@ -1,0 +1,11 @@
+# Source files (TypeScript already compiled to dist/)
+src/
+tsconfig.json
+
+# Test/example HTML files
+*.html
+
+# Development files
+node_modules/
+output/
+.gitignore

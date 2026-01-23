@@ -1,0 +1,60 @@
+{
+  "name": "@tehwolf/wp2md",
+  "version": "1.0.0",
+  "description": "Convert WordPress Block Editor HTML to clean Markdown with automatic image downloads and syntax highlighting",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "wp2md": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc && cp package.json dist/",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "clean": "rm -rf dist output"
+  },
+  "keywords": [
+    "wordpress",
+    "markdown",
+    "converter",
+    "gutenberg",
+    "block-editor",
+    "html-to-markdown",
+    "wordpress-export",
+    "static-site-generator",
+    "frontmatter",
+    "obsidian",
+    "logseq",
+    "notion",
+    "jekyll",
+    "hugo",
+    "knowledge-management",
+    "cli",
+    "wp2md"
+  ],
+  "author": "tehw0lf",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tehw0lf/wp2md.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tehw0lf/wp2md/issues"
+  },
+  "homepage": "https://github.com/tehw0lf/wp2md#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/turndown": "^5.0.4",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
