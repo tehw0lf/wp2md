@@ -180,6 +180,18 @@ function createTurndownService(): TurndownService {
 }
 
 /**
+ * Sanitizes a filename to prevent path traversal attacks
+ */
+function sanitizeFilename(filename: string): string {
+  // Remove any path separators and parent directory references
+  return filename
+    .replace(/^.*[\\\/]/, '') // Remove any directory path
+    .replace(/\.\./g, '') // Remove parent directory references
+    .replace(/[<>:"|?*\x00-\x1F]/g, '') // Remove invalid filename characters
+    .trim() || 'image'; // Fallback to 'image' if filename becomes empty
+}
+
+/**
  * Downloads an image from a URL
  */
 async function downloadImage(url: string, outputDir: string): Promise<string> {
@@ -191,17 +203,18 @@ async function downloadImage(url: string, outputDir: string): Promise<string> {
     }
 
     const buffer = await response.arrayBuffer();
-    const filename = path.basename(new URL(url).pathname);
-    const filepath = path.join(outputDir, filename);
+    const urlFilename = path.basename(new URL(url).pathname);
+    const sanitizedFilename = sanitizeFilename(urlFilename);
+    const filepath = path.join(outputDir, sanitizedFilename);
 
     await fs.mkdir(outputDir, { recursive: true });
     await fs.writeFile(filepath, Buffer.from(buffer));
 
     // Show file size
     const sizeKB = (buffer.byteLength / 1024).toFixed(2);
-    console.log(`   ✓ Saved: ${filename} (${sizeKB} KB)`);
+    console.log(`   ✓ Saved: ${sanitizedFilename} (${sizeKB} KB)`);
 
-    return filename;
+    return sanitizedFilename;
   } catch (error) {
     console.warn(`   ⚠️  Error downloading ${url}: ${error}`);
     return url; // Fallback to original URL

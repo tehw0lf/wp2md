@@ -3,6 +3,25 @@ import { convertWordPressToMarkdown } from './converter.js';
 import { promises as fs } from 'fs';
 import path from 'path';
 
+/**
+ * Sanitizes a path component to prevent path traversal attacks
+ */
+function sanitizePath(userPath: string): string {
+  // Normalize the path and remove any parent directory references
+  const normalized = path.normalize(userPath).replace(/^(\.\.(\/|\\|$))+/, '');
+
+  // Ensure the path doesn't start with a separator (absolute path)
+  return normalized.replace(/^[\/\\]+/, '');
+}
+
+/**
+ * Sanitizes a filename to prevent path traversal
+ */
+function sanitizeFilename(filename: string): string {
+  // Remove any path separators and parent directory references
+  return path.basename(filename);
+}
+
 interface CliOptions {
   output: string;
   downloadImages: boolean;
@@ -63,7 +82,8 @@ async function main() {
   }
 
   const inputDir = process.cwd();
-  const outputDir = path.resolve(inputDir, options.output);
+  const sanitizedOutput = sanitizePath(options.output);
+  const outputDir = path.resolve(inputDir, sanitizedOutput);
   const imagesDir = path.join(outputDir, 'images');
 
   // Create output directories
@@ -97,16 +117,17 @@ async function main() {
   for (const file of htmlFiles) {
     console.log(`\n🔄 Converting: ${file}`);
 
-    const inputPath = path.join(inputDir, file);
+    const sanitizedFile = sanitizeFilename(file);
+    const inputPath = path.join(inputDir, sanitizedFile);
     const htmlContent = await fs.readFile(inputPath, 'utf-8');
 
-    const result = await convertWordPressToMarkdown(htmlContent, file, {
+    const result = await convertWordPressToMarkdown(htmlContent, sanitizedFile, {
       downloadImages: options.downloadImages,
       imagesDir: options.downloadImages ? imagesDir : undefined,
     });
 
     // Create output filename
-    const basename = path.basename(file, '.html');
+    const basename = path.basename(sanitizedFile, '.html');
     const outputPath = path.join(outputDir, `${basename}.md`);
 
     // Create frontmatter + markdown content
