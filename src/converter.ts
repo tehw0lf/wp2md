@@ -205,9 +205,17 @@ async function downloadImage(url: string, outputDir: string): Promise<string> {
     const buffer = await response.arrayBuffer();
     const urlFilename = path.basename(new URL(url).pathname);
     const sanitizedFilename = sanitizeFilename(urlFilename);
-    const filepath = path.join(outputDir, sanitizedFilename);
 
-    await fs.mkdir(outputDir, { recursive: true });
+    // Resolve outputDir to absolute path and ensure filepath stays within bounds
+    const resolvedOutputDir = path.resolve(outputDir);
+    const filepath = path.resolve(resolvedOutputDir, sanitizedFilename);
+
+    // Validate that the resolved filepath is within the output directory
+    if (!filepath.startsWith(resolvedOutputDir + path.sep) && filepath !== resolvedOutputDir) {
+      throw new Error('Invalid file path: path traversal detected');
+    }
+
+    await fs.mkdir(resolvedOutputDir, { recursive: true });
     await fs.writeFile(filepath, Buffer.from(buffer));
 
     // Show file size
