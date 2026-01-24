@@ -5,13 +5,19 @@
   "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "wp2md": "./dist/index.js"
+    "wp2md": "dist/index.js"
   },
   "scripts": {
     "build": "tsc && cp package.json dist/",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
     "clean": "rm -rf dist output"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "wordpress",
