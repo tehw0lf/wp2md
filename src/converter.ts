@@ -213,13 +213,13 @@ async function downloadImage(url: string, outputDir: string): Promise<string> {
     const sanitizedFilename = sanitizeFilename(urlFilename);
 
     // Normalize and resolve paths to absolute paths (built-in security)
-    // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
     // Rationale: outputDir is sanitized at call site (index.ts sanitizePath), then normalized/resolved here.
     // Explicit boundary validation below ensures filepath stays within outputDir. Defense in depth is applied.
-    const resolvedOutputDir = path.resolve(path.normalize(outputDir));
     // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
+    const resolvedOutputDir = path.resolve(path.normalize(outputDir));
     // Rationale: Both inputs are sanitized (resolvedOutputDir from above, sanitizedFilename via sanitizeFilename).
     // Explicit boundary check immediately follows to prevent path traversal.
+    // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
     const filepath = path.resolve(resolvedOutputDir, sanitizedFilename);
 
     // Validate that the resolved filepath is within the output directory
