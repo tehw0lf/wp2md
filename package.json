@@ -1,5 +1,5 @@
 {
-  "name": "@tehwolf/wp2md",
+  "name": "@tehw0lf/wp2md",
   "version": "1.0.0",
   "description": "Convert WordPress Block Editor HTML to clean Markdown with automatic image downloads and syntax highlighting",
   "main": "dist/index.js",
