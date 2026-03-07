@@ -21,6 +21,5 @@ jobs:
       tool: "npm"
       build_branch: "run build"
       build_main: "run build"
-      event_name: ${{ github.event_name }}
       artifact_path: "dist"
       library_path: "dist"
