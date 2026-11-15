@@ -34,6 +34,7 @@ jobs:
       contents: write
       security-events: write
       actions: read
+      issues: write
       pull-requests: write
     with:
       tool: "npm"
